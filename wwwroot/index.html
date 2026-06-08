@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transport Alert System</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Segoe UI, sans-serif;
+        }
+
+        body{
+            background:#0b1020;
+            color:white;
+            min-height:100vh;
+            padding:40px;
+            background-image:
+                radial-gradient(circle at 20% 20%, #1f4b99 0%, transparent 30%),
+                radial-gradient(circle at 80% 30%, #00d4ff22 0%, transparent 30%);
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .header{
+            text-align:center;
+            margin-bottom:40px;
+        }
+
+        .header h1{
+            font-size:3rem;
+            color:#00d4ff;
+            text-transform:uppercase;
+            letter-spacing:4px;
+            text-shadow:0 0 20px #00d4ff;
+        }
+
+        .header p{
+            margin-top:10px;
+            color:#a0b4d4;
+        }
+
+        .status{
+            display:flex;
+            gap:20px;
+            margin-bottom:30px;
+        }
+
+        .stat{
+            flex:1;
+            background:#131c35;
+            padding:20px;
+            border-radius:15px;
+            text-align:center;
+            border:1px solid #00d4ff33;
+        }
+
+        .stat h3{
+            color:#00d4ff;
+            font-size:2rem;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:25px;
+        }
+
+        .card{
+            background:#131c35;
+            border-radius:20px;
+            padding:25px;
+            border:1px solid #00d4ff33;
+            box-shadow:0 0 25px rgba(0,0,0,.4);
+        }
+
+        h2{
+            margin-bottom:20px;
+            color:#00d4ff;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin-bottom:15px;
+            border:none;
+            border-radius:10px;
+            background:#1e2b50;
+            color:white;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#00d4ff;
+            color:black;
+            font-weight:bold;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        button:hover{
+            transform:scale(1.03);
+            box-shadow:0 0 20px #00d4ff;
+        }
+
+        pre{
+            background:#09101f;
+            padding:15px;
+            border-radius:10px;
+            min-height:220px;
+            overflow:auto;
+            color:#7ef9ff;
+            white-space:pre-wrap;
+        }
+
+        .footer{
+            text-align:center;
+            margin-top:40px;
+            color:#7a8cae;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Transport Alert Control Center</h1>
+        <p>Public Transport Disruption Alerting System</p>
+    </div>
+
+    <div class="status">
+
+        <div class="stat">
+            <h3>30s</h3>
+            <p>Polling Interval</p>
+        </div>
+
+        <div class="stat">
+            <h3>60s</h3>
+            <p>Notification Target</p>
+        </div>
+
+        <div class="stat">
+            <h3>99%</h3>
+            <p>Availability Goal</p>
+        </div>
+
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+
+            <h2>Subscribe to Route</h2>
+
+            <input
+                id="email"
+                placeholder="Passenger Email">
+
+            <input
+                id="route"
+                placeholder="Route Number">
+
+            <button onclick="subscribe()">
+                Subscribe
+            </button>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Matched Alerts</h2>
+
+            <button onclick="loadAlerts()">
+                Load Alerts
+            </button>
+
+            <br><br>
+
+            <pre id="alerts">
+No alerts loaded.
+            </pre>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Current Disruptions</h2>
+
+            <button onclick="loadDisruptions()">
+                Load Disruptions
+            </button>
+
+            <br><br>
+
+            <pre id="disruptions">
+No disruptions loaded.
+            </pre>
+
+        </div>
+
+        <div class="card">
+
+            <h2>System Status</h2>
+
+            <pre>
+Transport Feed : ONLINE
+
+Database       : CONNECTED
+
+Alert Engine   : ACTIVE
+
+Subscribers    : READY
+            </pre>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Educational Practice of E-Service Systems Design
+    </div>
+
+</div>
+
+<script>
+
+async function subscribe(){
+
+    await fetch('/api/subscription',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+            email:document.getElementById('email').value,
+            routeId:document.getElementById('route').value
+        })
+    });
+
+    alert('Subscription Added');
+}
+
+async function loadAlerts(){
+
+    const response =
+        await fetch('/api/subscription/alerts');
+
+    const data =
+        await response.json();
+
+    let output = '';
+
+    data.forEach(alert => {
+        output +=
+`ROUTE ${alert.route}
+${alert.message}
+
+Subscriber: ${alert.email}
+
+-------------------------
+
+`;
+    });
+
+    document.getElementById('alerts').innerText =
+        output || 'No alerts found';
+}
+
+async function loadDisruptions(){
+
+    const response =
+        await fetch('/api/disruption');
+
+    const data =
+        await response.json();
+
+    let output = '';
+
+    data.forEach(d => {
+        output +=
+`ROUTE ${d.routeId}
+${d.message}
+
+Created:
+${d.createdAt}
+
+-------------------------
+
+`;
+    });
+
+    document.getElementById('disruptions').innerText =
+        output || 'No disruptions found';
+}
+
+</script>
+
+</body>
+</html>
