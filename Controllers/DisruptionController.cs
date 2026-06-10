@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using TransportAlerts.Data;
 using TransportAlerts.Models;
+using TransportAlerts.Services;
 
 namespace TransportAlerts.Controllers;
 
@@ -8,30 +8,22 @@ namespace TransportAlerts.Controllers;
 [Route("api/[controller]")]
 public class DisruptionController : ControllerBase
 {
-    private readonly AppDbContext _db;
-
-    public DisruptionController(AppDbContext db)
-    {
-        _db = db;
-    }
-
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(_db.Disruptions.ToList());
+        return Ok(DataStore.Disruptions);
     }
 
     [HttpPost("seed")]
     public IActionResult Seed()
     {
-        _db.Disruptions.Add(new Disruption
+        DataStore.Disruptions.Add(new Disruption
         {
+            Id = DataStore.Disruptions.Count + 1,
             RouteId = "15",
             Message = "20 minute delay",
             CreatedAt = DateTime.Now
         });
-
-        _db.SaveChanges();
 
         return Ok("Disruption added");
     }
