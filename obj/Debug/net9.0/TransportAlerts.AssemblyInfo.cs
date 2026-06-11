@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TransportAlerts")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+af5ce5b114c0873c849e3cab77f4e254b269ffdd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d54e6962433d47f0a792481af046cde79d77dc98")]
 [assembly: System.Reflection.AssemblyProductAttribute("TransportAlerts")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TransportAlerts")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

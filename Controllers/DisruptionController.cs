@@ -17,14 +17,24 @@ public class DisruptionController : ControllerBase
     [HttpPost("seed")]
     public IActionResult Seed()
     {
+        DataStore.Disruptions.Clear();
+
         DataStore.Disruptions.Add(new Disruption
         {
-            Id = DataStore.Disruptions.Count + 1,
+            Id = 1,
             RouteId = "15",
             Message = "20 minute delay",
             CreatedAt = DateTime.Now
         });
 
-        return Ok("Disruption added");
+        DataStore.Disruptions.Add(new Disruption
+        {
+            Id = 2,
+            RouteId = "22",
+            Message = "Service cancelled",
+            CreatedAt = DateTime.Now
+        });
+
+        return Ok("Demo data loaded");
     }
 }
