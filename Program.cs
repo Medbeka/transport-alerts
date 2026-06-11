@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddHostedService<DisruptionPollingService>();
+// builder.Services.AddHostedService<DisruptionPollingService>();
 
 builder.Services.AddOpenApi();
 
